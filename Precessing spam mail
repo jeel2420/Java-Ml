@@ -15,13 +15,18 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        Path path = Paths.get(System.getProperty("user.dir"))
-                .resolve("spmsga1.txt");
+        Path path = Paths.get(System.getProperty("user.dir")).resolve("spmsga1.txt");
+
         BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
 
         Map<String, Integer> frequency = new LinkedHashMap<>();
 
         String line = reader.readLine();
+
+        Functions f=new Functions(); //Object of the Functions class to implement any preprocessing tasks.
+        
+        line=f.remove_marks(line);  //Return a line without any marks (specified in the 'or' condition)
+
         while(line != null) {
             //System.out.println("Processing line: " + line);
 
@@ -43,13 +48,30 @@ public class Main {
             }
             line = reader.readLine();
         }
+        
+        f.stopwords_removal(frequency);
+        System.out.println(frequency);
+    }
+}
 
+class Functions{
+    void stopwords_removal(Map<String,Integer> frequency){
         for(int pos=0;pos<frequency.size();pos++) {
             String response = (String) (frequency.keySet().toArray())[pos];
             if(Stopwords.isStopword(response)){
                 frequency.remove(response);
             }
         }
-        System.out.println(frequency);
+    }
+
+    String remove_marks(String line){
+        StringBuilder str=new StringBuilder(line);  //String builder was used because, I wanted to use setCharAt()
+        for(int i=0;i<line.length();i++) {
+            char r = line.toCharArray()[i];
+            if (r == '?' || r == '!' || r == '/' || r == '@') {
+                str.setCharAt(i,' ');
+            }
+        }
+        return str.toString();
     }
 }
