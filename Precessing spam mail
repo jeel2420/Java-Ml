@@ -15,13 +15,13 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        BufferedReader filereader = new BufferedReader(new FileReader("spam-train-set.txt"));
+        BufferedReader filereader = new BufferedReader(new FileReader("spam-train-set.txt")); //file contains all filenames in spam train folder
 
         String filename = filereader.readLine();
 
         while(filename != null)
         {
-            String path = "C:\\Users\\Lenovo\\Desktop\\JavaML\\spam-train\\"+filename;
+            String path = "C:\\Users\\Lenovo\\Desktop\\JavaML\\spam-train\\"+filename; 
             BufferedReader reader = new BufferedReader(new FileReader(path));
             filename = filereader.readLine();
             Map<String, Integer> frequency = new LinkedHashMap<>();
