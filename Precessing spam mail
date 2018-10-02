@@ -17,24 +17,47 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        Path path = Paths.get(System.getProperty("user.dir")).resolve("spmsga1.txt");
+        BufferedReader filereader = new BufferedReader(new FileReader("spam-train-set.txt"));
 
-        BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
+        String filename = filereader.readLine();
 
-        Map<String, Integer> frequency = new LinkedHashMap<>();
+        while(filename != null)
+        {
+            String path = "C:\\Users\\Lenovo\\Desktop\\JavaML\\spam-train\\"+filename;
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+            filename = filereader.readLine();
+            Map<String, Integer> frequency = new LinkedHashMap<>();
 
-        String line = reader.readLine();
+            String line = reader.readLine();
 
-        Functions f=new Functions(); //Object of the Functions class to implement any preprocessing tasks.
+            Functions f=new Functions(); //Object of the Functions class to implement any preprocessing tasks.
+            line = f.stemming_string(line);
+            line = f.remove_marks(line);  //Return a line without any marks (specified in the 'or' condition)
+            while(line != null) {
+                //System.out.println("Processing line: " + line);
 
-        line = f.stemming_string(line);  //Stemming the string
+                String [] words = line.split(" ");
 
-        line=f.remove_marks(line);  //Return a line without any marks (specified in the 'or' condition)
+                for(String word : words) {
+                    if(word == null || word.trim().equals("")) {
+                        continue;
+                    }
+                    String processed = word.toLowerCase();
+                    processed = processed.replace(",", "");
 
+                    if(frequency.containsKey(processed)) {
+                        frequency.put(processed,
+                                frequency.get(processed) + 1);
+                    } else {
+                        frequency.put(processed, 1);
+                    }
+                }
+                line = reader.readLine();
+            }
 
-        f.stopwords_removal(frequency);
-        
-        System.out.println(frequency);
+            f.stopwords_removal(frequency);
+            System.out.println(frequency);
+        }
     }
 }
 
@@ -58,7 +81,6 @@ class Functions{
         }
         return str.toString();
     }
-
     String stemming_string(String line){
         Stemmer stem= new SnowballStemmer(line); //Snowball is a type of stemming
 
