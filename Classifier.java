@@ -62,7 +62,7 @@ public class scratch_14 {
             line = reader.readLine();
         }
         //=======================================
-        BufferedReader reader1 = new BufferedReader(new FileReader("C:\\Users\\dishant\\Desktop\\spmsga11.txt"));
+        BufferedReader reader1 = new BufferedReader(new FileReader("C:\\Users\\dishant\\Desktop\\3-402msg3.txt"));
         Map<String, Integer> frequency1 = new LinkedHashMap<>();
 
         String line1 = reader1.readLine();
@@ -89,12 +89,11 @@ public class scratch_14 {
                     frequency1.put(processed1, 1);
                 }
             }
-            line1 = reader.readLine();
+            line1 = reader1.readLine();
         }
         //=======================================
         f1.stopwords_removal(frequency1);
         System.out.println(frequency1);
-        System.out.println("Important words");
         String[] Imp_Words = f.important_word(frequency);
         f1.classifier(frequency1,Imp_Words);
     }
@@ -129,8 +128,7 @@ class Functions{
         return line;
     }
     String[] important_word(Map<String,Integer> frequency) {
-        System.out.println("Important words started");
-        String[] imp_words = new String[61];
+        String[] imp_words = new String[100];
         int k=0;
         for (Map.Entry<String, Integer> entry : frequency.entrySet()) {
             if (entry.getValue() > 200) {
@@ -138,20 +136,28 @@ class Functions{
                 k++;
             }
         }
-        System.out.println("Important words done!");
         return imp_words;
     }
 
     void classifier(Map<String,Integer> frequency,String[] Imp_words){
+        int is_spam=0;
         String[] file_words = new String[frequency.size()];
+        for(int i=0;i<frequency.size();i++){
+            file_words[i]=(String)(frequency.keySet().toArray())[i];
+        }
         for(int i=0;i<frequency.size();i++){
             for(int j=0;j<Imp_words.length;j++){
                 if(file_words[i].equals(Imp_words[j])) {
-                    System.out.println("The file is a Spam");
+                    is_spam=1;
                     break;
                 }
-                System.out.println(file_words[i]+" Checked!");
             }
+            if(is_spam==1){
+                System.out.println("The file is a spam!");
+                break;
+            }System.out.println(file_words[i]+" Checked!");
         }
+        if(is_spam==0)
+            System.out.println("The file is not spam!");
     }
 }
